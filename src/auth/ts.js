@@ -8,6 +8,7 @@ const {createUser, getUser} = require('./authservices')
 const HELPER = require('../utils/helper')
 const CONSTANTS = require('../constants/ts')
 const welcomeMail = require('../utils/email/html/welcome')
+const passwordResetMail = require('../utils/email/html/passwordreset')
 require('dotenv').config()
 
 exports.register = catchAsync(async (req, res) => {
@@ -48,7 +49,7 @@ exports.login = catchAsync(async(req, res) => {
 
 })
 
-exports.logout = catchAsync(async(req, res) => {
+exports.logout = catchAsync( async(req, res) => {
 
     HELPER.clearCookies(res, CONSTANTS.TOKEN.NAME )
     res.status(STATUSCODES.OK).json({
@@ -56,4 +57,58 @@ exports.logout = catchAsync(async(req, res) => {
         msg: "Logout Successful!"
     })
     
+})
+
+exports.forgotPassword = catchAsync( async( req, res) => {
+    const {email} = req.body;
+    const user = await getUser({email: email})
+
+    if (!user){
+        throw new AppError('User doesn\'t exist!', STATUSCODES.BAD_REQUEST)
+    }
+
+    const resetToken = user.createResetPasswordToken()
+    await user.save()
+
+    const resetURl = `${CONSTANTS.LINKS.RESETPASSWORD}${resetToken}`
+    try{
+        await passwordResetMail(user.username, user.email, resetURl)
+        res.status(STATUSCODES.OK).json({
+            status: true,
+            msg: 'Token sent to email!'
+        })
+    }
+    catch(err){
+        user.passwordResetToken = undefined
+        user.passwordResetExpires = undefined
+        await user.save({ validateBeforeSave: false })
+        throw new AppError('An error occured while sending mail, Try again!')
+    }
+
+})
+
+
+exports.resetPassword = catchAsync( async( req, res ) => {
+    const {password} = req.body;
+
+    const hashedToken = HELPER.hashToken(req.params.token)
+    const user = await getUser({
+        passwordResetToken: hashedToken,
+        passwordResetExpires: { $gt: Date.now() }
+    })
+
+    if (!user){
+        throw new AppError('Token is invalid or expired!', STATUSCODES.BAD_REQUEST)
+    }
+
+    user.password = password
+    user.passwordResetToken = undefined
+    user.passwordResetExpires = undefined
+    await user.save()
+
+    res.status(STATUSCODES.OK).json({
+        status: true,
+        msg: "Password updated successfully!"
+    })
+
 })
