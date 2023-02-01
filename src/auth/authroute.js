@@ -3,7 +3,9 @@ const authController = require('./ts')
 const {
     validateRegistrationBody: registrationValidator,
     validateLoginBody: loginValidator,
-    validateLoginBody
+    validateForgotPasswordBody: forgotPasswordValidator,
+    validateResetPasswordBody:  resetPasswordValidator
+    
 } = require('./authvalidator')
 
 
@@ -15,10 +17,18 @@ router
 
 router
     .route("/login")
-    .post(validateLoginBody, authController.login)
+    .post(loginValidator, authController.login)
 
 router
     .route("/logout")
     .get(authController.logout)
+
+router 
+    .route("/forgotPassword")
+    .post(forgotPasswordValidator, authController.forgotPassword)
+
+router
+    .route("/resetPassword/:token")
+    .post(resetPasswordValidator, authController.resetPassword)
 
 module.exports = router;
