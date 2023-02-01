@@ -1,84 +1,65 @@
+require('dotenv').config()
 const AppError = require('./appError')
 
-// THIS FUNCTION HANDLES THE CASTERROR ERROR
-//ERRORS
+/*Defined error*/
+const prodValidationError = (err) => {
+    return new AppError(err.message, 400)
+}
 
-// 1
+/*Defined Error 1*/
 const handleCastErrorDB = (err) => {
     const message = `Invalid ${err.path}: ${err.value}`
     return new AppError(message, 400)
 }
 
-//2
-
 const handleDuplicateFieldsDb = (err) => {
-    const value = err.keyValue.name
-    const message = `Duplicate value entered for ${Object.keys(
-        err.keyValue
-    )} field, please choose another value`
+    const value = err.keyValue.title
+        ? JSON.stringify(err.keyValue.title)
+        : JSON.stringify(err.keyValue.email)
+    const message = `Duplicate field value < ${value} >: Please use another value!`
     return new AppError(message, 400)
 }
 
-const handleJWTError = (err) =>
-    new AppError('Invalid token please log in again!', 401)
-const handleJWTExpiredError = (err) =>
-    new AppError('Your token has expired! Please log in again!', 401)
-
-// ERROR HANDLER WHILE APP IS IN DEVELOPMENT
-const sendErrorDev = (err, res) => {
-    console.log(err)
-    res.status(err.statusCode).json({
-        status: err.status,
-        //error: err,
+/*Development error handler*/
+const devHandler = (err, req, res, next) => {
+    const statusCode = err.statusCode || 500
+    const status = err.status || 'error'
+    res.status(statusCode).json({
+        status: status,
         message: err.message,
-        // stack: err.stack,
     })
 }
 
-// ERROR HANDLER WHILE APP IS IN PRODUCTION
-const sendErrorProd = (err, res) => {
-    // OPERATIONAL ERRORS THAT WE HAVE PREDEFINED IN THE CLASS
+/*Production error handler*/
+var prodHandler = (err, req, res, next) => {
+    console.log(err)
 
+    /*Defined Errors*/
+    if (err.name === 'ValidationError') {
+        err = prodValidationError(err)
+    }
+    if (err.name === 'CastError') {
+        err = handleCastErrorDB(err)
+    }
+    if (err.code === 11000) {
+        err = handleDuplicateFieldsDb(err)
+    }
+
+    /*Response Handler for defined errors*/
     if (err.isOperational) {
-        res.status(err.statusCode).json({
+        return res.status(err.statusCode).json({
             status: err.status,
             message: err.message,
         })
-        console.log(err.message)
-    }
+    } else {
 
-    // ERRORS THAT ARE NOT PREDEFINED ARE HANDLED HERE
-    else {
-        //console.log(err)
-        res.status(err.statusCode).json({
-            status: err.status,
-            message: 'Something went very wrong!',
+    /*Response Handlers for undefined errors*/
+        return res.status(500).json({
+            status: 'error',
+            message: 'Server Issues!',
         })
     }
 }
 
-// GLOBAL ERROR HANDLER
-// WHEN AN UNHANDLED ERROR OCCURS THIS IS THE ROUTE THAT IS HIT
-module.exports = (err, req, res, next) => {
-    err.statusCode = err.statusCode || 500
-    err.status = err.status || 'error'
-
-    // dETERMINES IF WE ARE IN PRODUCTION OR DEVELOPMENT
-    if (process.env.NODE_ENV === 'development') {
-        sendErrorDev(err, res)
-    } else if (process.env.NODE_ENV === 'production') {
-        // DEEP COPY THE err ARGUMENT
-        let error = JSON.parse(JSON.stringify(err))
-
-
-        //DETERMINES THE TYPE OF ERROR AND ATTACHES THE APPROPRIATE ERROR FUNCTION
-        if (error.name === 'CastError') error = handleCastErrorDB(error)
-        if (error.code === 11000) error = handleDuplicateFieldsDb(error)
-        if (error.name === 'JsonWebTokenError') error = handleJWTError(error)
-        if (error.name === 'TokenExpiredError')
-            error = handleJWTExpiredError(error)
-
-        // CALLS THE ERRORPROD FUNCTION
-        sendErrorProd(error, res)
-    }
-}
+module.exports =
+    process.env.NODE_ENV === 'development' ? devHandler : prodHandler
