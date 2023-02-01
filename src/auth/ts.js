@@ -7,22 +7,20 @@ const {createUser, getUser} = require('./authservices')
 
 const HELPER = require('../utils/helper')
 const CONSTANTS = require('../constants/ts')
+const welcomeMail = require('../utils/email/html/welcome')
 require('dotenv').config()
 
 exports.register = catchAsync(async (req, res) => {
 
-    /*Destructuring fields*/
     const {firstname, lastname, username, email, phonenumber, gender, password, profilepicurl } = req.body;
-    
-
-    /*Calling the createuser service to save to DB*/
     const newUser = await createUser({
         firstname, lastname, username, email, phonenumber, gender, password, profilepicurl, usertype: CONSTANTS.ACCOUNT_TYPES.USER
     })
 
+    /* SEND WELCOME MAIL TO USERS*/
+    await welcomeMail(newUser.username, newUser.email)
     newUser.password = undefined;
 
-    /*Success Response*/
     res.status(STATUSCODES.CREATED).json({
         newUser,
     })
@@ -33,7 +31,6 @@ exports.login = catchAsync(async(req, res) => {
     
     const user = await getUser({email: email})
 
-    /*Throw error if credentials are incorrect*/
     if (!user || !(await user.correctPassword(password, user.password))){
         throw new AppError(CONSTANTS.MESSAGE.ERROR.LOGIN, STATUSCODES.BAD_REQUEST)
     }
