@@ -58,6 +58,7 @@ const registerSchema = joi.object().keys({
         .error(new Error('Password must be at least 8 characters')),
 })
 
+
 const loginSchema = joi.object().keys({
     email: joi
         .string()
@@ -71,7 +72,28 @@ const loginSchema = joi.object().keys({
         .error(new Error('Password must be at least 8 characters')),
 })
 
+
+const forgotPasswordSchema = joi.object().keys({
+    email: joi
+        .string()
+        .email()
+        .required()
+        .error(new Error('Provide valid email address'))
+})
+
+const resetPasswordSchema = joi.object().keys({
+    password: joi
+        .string()
+        .min(8)
+        .required()
+        .error(new Error('Password must be at least 8 characters')),
+})
+
+
+
 const validateRegistrationBody = validateBody(registerSchema);
 const validateLoginBody = validateBody(loginSchema)
+const validateForgotPasswordBody = validateBody(forgotPasswordSchema)
+const validateResetPasswordBody = validateBody(resetPasswordSchema)
 
-module.exports = {validateRegistrationBody, validateLoginBody};
+module.exports = {validateRegistrationBody, validateLoginBody, validateForgotPasswordBody, validateResetPasswordBody};
