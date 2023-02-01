@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
-CONSTANTS = require('../constants/ts')
+const CONSTANTS = require('../constants/ts')
+const crypto = require('crypto')
 require('dotenv').config()
 
 
@@ -15,7 +16,7 @@ exports.setCookies = (res, tokenName, token) => {
         httpOnly: true,
         secure: CONSTANTS.APP_ENV.PRODUCTION,
     })
-    
+
 }
 
 exports.clearCookies = (res, tokenName) => {
@@ -25,4 +26,9 @@ exports.clearCookies = (res, tokenName) => {
         secure: CONSTANTS.APP_ENV.PRODUCTION,
     })
     
+}
+
+exports.hashToken = (token) => {
+    return crypto.createHash('sha256').update(token).digest('hex')
+
 }
