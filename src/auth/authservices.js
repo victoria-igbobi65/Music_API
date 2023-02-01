@@ -11,19 +11,19 @@ const getUser = async (object) => {
     return user;
 }
 
-const updateUser = catchAsync(async (payload) => {
+const updateUser = async (payload) => {
     const user = User.findByIdAndUpdate(payload);
     return user;
-})
+}
 
-const deleteUser = catchAsync(async (id) => {
+const deleteUser = async (id) => {
     return await User.findByIdAndDelete(id)
-})
+}
 
-const getAllUsers = catchAsync(async () => {
+const getAllUsers = async () => {
     const users = await User.find({})
     return users;
-})
+}
 
 module.exports = {
     createUser,
