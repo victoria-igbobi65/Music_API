@@ -28,7 +28,7 @@ const passwordResetMail = async (name, email, resetURl) => {
         `
 
     return sendEmail({
-        from: 'Music App <noreply@gmail.com>',
+        from: '"Music App" <noreply@gmail.com>',
         to: email,
         subject: 'Forgot Password',
         html: message,

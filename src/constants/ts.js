@@ -36,7 +36,7 @@ module.exports = {
         EMAIL_VERIFICATION: 'email_verification',
     },
     LINKS: {
-        RESETPASSWORD: 'http://localhost:500/auth/resetPassword/',
+        RESETPASSWORD: 'http://localhost:5000/auth/resetPassword/',
     },
     TOKEN: {
         NAME: 'jwt_token',

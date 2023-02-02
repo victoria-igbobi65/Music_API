@@ -3,13 +3,15 @@ const STATUSCODES = require('http-status-codes')
 
 const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
-const {createUser, getUser} = require('./authservices')
-
-const HELPER = require('../utils/helper')
 const CONSTANTS = require('../constants/ts')
+const {createUser, getUser, deleteUser} = require('./authservices')
+const HELPER = require('../utils/helper')
+
 const welcomeMail = require('../utils/email/html/welcome')
+const adminWelcome = require('../utils/email/html/adminWelcome')
 const passwordResetMail = require('../utils/email/html/passwordreset')
 require('dotenv').config()
+
 
 exports.register = catchAsync(async (req, res) => {
 
@@ -60,6 +62,7 @@ exports.logout = catchAsync( async(req, res) => {
 })
 
 exports.forgotPassword = catchAsync( async( req, res) => {
+
     const {email} = req.body;
     const user = await getUser({email: email})
 
@@ -89,6 +92,7 @@ exports.forgotPassword = catchAsync( async( req, res) => {
 
 
 exports.resetPassword = catchAsync( async( req, res ) => {
+
     const {password} = req.body;
 
     const hashedToken = HELPER.hashToken(req.params.token)
@@ -111,4 +115,27 @@ exports.resetPassword = catchAsync( async( req, res ) => {
         msg: "Password updated successfully!"
     })
 
+})
+
+exports.adminSignup = catchAsync( async( req, res) => {
+
+    const {firstname, lastname, username, email, phonenumber, gender, password, profilepicurl } = req.body;
+    const newAdmin = await createUser({
+        firstname, lastname, username, email, phonenumber, gender, password, profilepicurl, usertype: CONSTANTS.ACCOUNT_TYPES.ADMIN
+    })
+
+    newAdmin.password = undefined
+    try{
+        await adminWelcome(newAdmin.username, newAdmin.email)
+        res.status(STATUSCODES.CREATED).json({
+            status: true,
+            newAdmin,
+        })
+
+    }
+    catch(err){
+        await deleteUser(newAdmin._id)
+        throw new AppError('An error occured, Try again!', STATUSCODES.BAD_REQUEST)
+    }
+    
 })

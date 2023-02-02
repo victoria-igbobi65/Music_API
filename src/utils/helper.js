@@ -32,3 +32,7 @@ exports.hashToken = (token) => {
     return crypto.createHash('sha256').update(token).digest('hex')
 
 }
+
+exports.buildQuery = (object) => {
+    return object
+}

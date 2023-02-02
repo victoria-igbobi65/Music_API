@@ -11,17 +11,17 @@ const getUser = async (object) => {
     return user;
 }
 
-const updateUser = async (payload) => {
-    const user = User.findByIdAndUpdate(payload);
+const updateUser = async (userId, object, options) => {
+    const user = User.findByIdAndUpdate(userId, object, options);
     return user;
 }
 
 const deleteUser = async (id) => {
-    return await User.findByIdAndDelete(id)
+    return User.findByIdAndDelete(id)
 }
 
-const getAllUsers = async () => {
-    const users = await User.find({})
+const getAllUsers = async (object) => {
+    const users = await User.find(object)
     return users;
 }
 

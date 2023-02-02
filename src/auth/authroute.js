@@ -12,6 +12,10 @@ const {
 const router = express.Router();
 
 router
+    .route("/admin/signup")
+    .post(registrationValidator, authController.adminSignup)
+
+router
     .route("/signup")
     .post(registrationValidator, authController.register)
 
