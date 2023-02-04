@@ -6,9 +6,6 @@ const updateUserValidator = require('./userValidator')
 
 const router = express.Router()
 
-router
-    .route('/me')
-    .get( middleware.checkToken, userController.getMe)
 
 router
     .route("/")
