@@ -7,6 +7,7 @@ const AppError = require('./src/utils/appError')
 const globalErrorhandler = require('./src/utils/errors')
 const authRoute = require('./src/auth/authroute')
 const userRoute = require('./src/user/userRoute')
+const trackRoute = require('./src/tracks/trackroute')
 const app = express()
 
 app.use(express.json())
@@ -23,11 +24,12 @@ app.get('/', (req, res) => {
 })
 app.use('/auth/', authRoute)
 app.use('/user', userRoute)
+app.use('/track', trackRoute)
 
 
 /* ERROR HANDLERS */
 app.use('*', (req, res, next) => {
-    next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))
+    next(new AppError(`Can't find ${req.method} ${req.originalUrl} on this server!`, 404))
 })
 app.use(globalErrorhandler)
 
