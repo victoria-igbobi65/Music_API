@@ -1,8 +1,13 @@
 const AccessToken = require('./accesstokenschema')
 
-const createAccessToken = async( token ) => {
-    const newToken = AccessToken.create(token)
+const createAccessToken = async ( token ) => {
+    const newToken = await AccessToken.create(token)
     return newToken;
 }
 
-module.exports = {createAccessToken};
+const getAccessToken = async( object ) => {
+    const token = AccessToken.findOne(object)
+    return token;
+}
+
+module.exports = {createAccessToken, getAccessToken};
