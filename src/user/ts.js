@@ -62,17 +62,3 @@ exports.updateaUser = catchAsync( async( req, res ) => {
     })
 })
 
-exports.getMe = catchAsync( async( req, res ) => {
-    const token = req.cookies.jwt_token;
-    
-    const id = (await HELPER.decodeToken(token)).id;
-    if (!id){
-        throw new AppError('Invalid token!', 400)
-    }
-
-    const user = await getUser({ _id: id })
-    res.status(STATUSCODES.OK).json({
-        status: true,
-        user: user
-    })
-})
