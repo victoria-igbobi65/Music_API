@@ -13,3 +13,12 @@ exports.validateId = catchAsync( async( req, res, next ) => {
     }
     next();
 }) 
+
+exports.checkToken = (req, res, next) => {
+    const token = req.cookies.jwt_token;
+
+    if (!token){
+        throw new AppError('You are not logged in!', 403)
+    }
+    next()
+}
