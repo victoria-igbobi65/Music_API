@@ -4,6 +4,7 @@ const {getUser, getAllUsers, updateUser, deleteUser} = require('../auth/authserv
 const catchAsync = require('../utils/catchAsync')
 const CONSTANTS = require('../constants/ts')
 const HELPER = require('../utils/helper')
+const AppError = require('../utils/appError')
 
 
 exports.getaUser = catchAsync( async( req, res ) => {
@@ -62,11 +63,16 @@ exports.updateaUser = catchAsync( async( req, res ) => {
 })
 
 exports.getMe = catchAsync( async( req, res ) => {
-    const token = req.cookies.token;
+    const token = req.cookies.jwt_token;
     
-    console.log(token)
+    const id = (await HELPER.decodeToken(token)).id;
+    if (!id){
+        throw new AppError('Invalid token!', 400)
+    }
+
+    const user = await getUser({ _id: id })
     res.status(STATUSCODES.OK).json({
         status: true,
-        token: token
+        user: user
     })
 })
