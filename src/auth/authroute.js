@@ -27,12 +27,16 @@ router
     .route("/logout")
     .get(authController.logout)
 
+
+
 router 
     .route("/forgotPassword")
-    .post(forgotPasswordValidator, authController.forgotPassword)
+    .get(forgotPasswordValidator, authController.forgotPassword)
 
 router
     .route("/resetPassword/:token")
     .post(resetPasswordValidator, authController.resetPassword)
+
+
 
 module.exports = router;
