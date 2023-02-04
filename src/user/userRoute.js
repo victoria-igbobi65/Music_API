@@ -8,7 +8,7 @@ const router = express.Router()
 
 router
     .route('/me')
-    .get(userController.getMe)
+    .get( middleware.checkToken, userController.getMe)
 
 router
     .route("/")
