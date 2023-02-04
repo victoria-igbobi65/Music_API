@@ -1,9 +1,10 @@
 const request = require('request')
 require('dotenv').config()
 
+const {createAccessToken, getAccessToken} = require('./services')
 const CONSTANTS = require('../constants/ts')
 
-async function getSpotifyToken() {
+async function getSpotifyTokenCallback() {
     return new Promise((resolve, reject) => {
         request.post(
             {
@@ -27,6 +28,19 @@ async function getSpotifyToken() {
             }
         )
     })
+}
+
+
+const getSpotifyToken = async( req, res ) => {
+    let token = await getAccessToken({
+        expires: { $gt: Date.now() }
+    })
+    if ( !token ) {
+        const accessToken = (await getSpotifyTokenCallback()).access_token;
+        console.log(accessToken)
+        token = await createAccessToken( { token: accessToken } )
+    }
+    return token.token
 }
 
 
