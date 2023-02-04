@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const CONSTANTS = require('../constants/ts')
 const crypto = require('crypto')
+const {promisify} = require('util')
 require('dotenv').config()
 
 
@@ -36,3 +37,8 @@ exports.hashToken = (token) => {
 exports.buildQuery = (object) => {
     return object
 }
+
+exports.decodeToken = async (token) => {
+    return promisify(jwt.verify)(token, process.env.SECRET_KEY)
+}
+
