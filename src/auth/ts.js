@@ -1,4 +1,3 @@
-const joi = require('@hapi/joi')
 const STATUSCODES = require('http-status-codes')
 
 const AppError = require('../utils/appError')
