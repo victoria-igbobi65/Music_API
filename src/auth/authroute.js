@@ -28,7 +28,6 @@ router
     .get(authController.logout)
 
 
-
 router 
     .route("/forgotPassword")
     .get(forgotPasswordValidator, authController.forgotPassword)
@@ -36,7 +35,6 @@ router
 router
     .route("/resetPassword/:token")
     .post(resetPasswordValidator, authController.resetPassword)
-
 
 
 module.exports = router;
