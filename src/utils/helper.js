@@ -42,3 +42,32 @@ exports.decodeToken = async (token) => {
     return promisify(jwt.verify)(token, process.env.SECRET_KEY)
 }
 
+exports.destructureObject = ( object ) => {
+
+    const {
+        id,
+        name,
+        preview_url,
+        album: {
+            images,
+            album_type,
+            release_date,
+            artists: [{ 
+                name: artistName, 
+                type: artistType }],
+        },
+    } = object
+    
+    const imagesUrl = images.map(({ url }) => url)
+    return {
+        trackid: id,
+        name: name,
+        previewurl: preview_url,
+        artistname: artistName,
+        artisttype: artistType,
+        releasedate: release_date,
+        images: imagesUrl,
+        albumtype: album_type
+    }
+}
+
