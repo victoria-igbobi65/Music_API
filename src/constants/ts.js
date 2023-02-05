@@ -11,9 +11,7 @@ module.exports = {
     },
 
     ACCOUNT_STATUS: {
-        APPROVED: 'approved',
-        PENDING: 'pending',
-        DISSAPPROVED: 'disapproved',
+        SUSPENDED: true,
     },
 
     MESSAGE: {
