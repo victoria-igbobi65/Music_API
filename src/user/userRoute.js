@@ -1,10 +1,19 @@
 const express = require('express')
 
 const userController = require('./ts')
+const adminController = require('../admin/ts')
+
 const middleware = require('./middleware')
+
+const { validatesuspensionBody } = require('../admin/susvalidator')
 const updateUserValidator = require('./userValidator')
 
 const router = express.Router()
+
+
+router
+    .route('/:id/suspend')
+    .post(middleware.checkToken, middleware.protect, middleware.validateId, validatesuspensionBody, adminController.suspendUser)
 
 
 router
