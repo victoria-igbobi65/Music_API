@@ -37,7 +37,6 @@ const getSpotifyToken = async( req, res ) => {
     })
     if ( !token ) {
         const accessToken = (await getSpotifyTokenCallback()).access_token;
-        console.log(accessToken)
         token = await createAccessToken( { token: accessToken } )
     }
     return token.token
