@@ -1,11 +1,15 @@
 const { StatusCodes } = require('http-status-codes');
 const catchAsync = require('../utils/catchAsync')
-const { singleTrack } = require('./trackservices')
+const { apiCall, createTrack } = require('./trackservices')
+const CONSTANTS = require('../constants/ts')
 
 exports.getaTrack = catchAsync( async( req, res ) => {
-    const id = req.params.id;
-
-    const track = await singleTrack(id);
+    
+    const trackId = req.params.id;
+    
+    const url = `${CONSTANTS.LINKS.SPOTIFYREQUESTBASEURL}tracks/${trackId}`
+    const track = await apiCall(url);
+    
     res.status(StatusCodes.OK).json({
         track
     })
