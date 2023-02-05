@@ -2,7 +2,7 @@ const request = require('request')
 require('dotenv').config()
 
 const {createAccessToken, getAccessToken} = require('./services')
-const CONSTANTS = require('../constants/ts')
+
 
 async function getSpotifyTokenCallback() {
     return new Promise((resolve, reject) => {
