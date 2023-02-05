@@ -49,6 +49,10 @@ const userSchema = new Schema({
         required: [true, 'password is required!'],
         select: false,
     },
+    isSuspended: {
+        type: Boolean,
+        default: false
+    },
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date
