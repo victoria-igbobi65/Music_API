@@ -31,5 +31,5 @@ const trackSchema = new Schema({
     albumtype: String
 })
 
-const trackSchema1 = mongoose.model('track', trackSchema)
-module.exports = trackSchema1;
+const trackModel = mongoose.model('track', trackSchema)
+module.exports = trackModel;
