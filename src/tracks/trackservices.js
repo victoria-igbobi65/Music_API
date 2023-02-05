@@ -2,18 +2,21 @@ require('dotenv').config()
 const request = require('request')
 
 const getSpotifyToken = require('../token/spotifyrequest')
+const trackSchema = require('./trackschema')
+const AppError = require('../utils/appError')
 
-async function singleTrack( trackId ){
+
+async function apiCall( url ){
     const accessToken = await getSpotifyToken()
 
     return new Promise(( resolve, reject ) => {
 
         const options = {
-            url: `https://api.spotify.com/v1/tracks/${trackId}`,
+            url: url,
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
-            json: true
+            json: true,
         }
 
         request.get(options, (error, response, body) => {
@@ -28,18 +31,25 @@ async function singleTrack( trackId ){
 
 }
 
-async function likeaTrack(){
+const createTrack = async( object ) => {
+
+    const track = await trackSchema.findOne({ trackid: object.trackid})
+    if ( !track ){
+        const newTrack = await trackSchema.create( object )
+        return newTrack;
+    }
+    return 
+}
+
+const deleteTrack = async( id ) => {
+
+    return trackSchema.findByIdAndDelete(id);
 
 }
 
-async function shareaTrack(){
-
-}
-
-async function dislikeaTrack() {}
-
-async function unlikeaTrack() {}
 
 module.exports= {
-    singleTrack
+    apiCall,
+    createTrack,
+    deleteTrack
 }
