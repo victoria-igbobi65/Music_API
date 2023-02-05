@@ -2,7 +2,7 @@ require('dotenv').config()
 const request = require('request')
 
 const getSpotifyToken = require('../token/spotifyrequest')
-const trackSchema = require('./trackschema')
+const Track = require('./trackschema')
 const AppError = require('../utils/appError')
 
 
@@ -33,9 +33,9 @@ async function apiCall( url ){
 
 const createTrack = async( object ) => {
 
-    const track = await trackSchema.findOne({ trackid: object.trackid})
+    const track = await Track.findOne({ trackid: object.trackid})
     if ( !track ){
-        const newTrack = await trackSchema.create( object )
+        const newTrack = await Track.create( object )
         return newTrack;
     }
     return 
@@ -43,13 +43,19 @@ const createTrack = async( object ) => {
 
 const deleteTrack = async( id ) => {
 
-    return trackSchema.findByIdAndDelete(id);
+    return Track.findByIdAndDelete(id);
 
+}
+
+const getTrackId = async( object ) => {
+    const track = Track.findOne( object );
+    return track;
 }
 
 
 module.exports= {
     apiCall,
     createTrack,
-    deleteTrack
+    deleteTrack,
+    getTrackId
 }
