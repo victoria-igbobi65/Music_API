@@ -15,5 +15,5 @@ const dilsikeSchema = new Schema({
     }
 })
 
-const dislikeSchema1 = mongoose.model('dislike', dilsikeSchema)
-module.exports=dislikeSchema1;
+const dislikeModel = mongoose.model('dislike', dilsikeSchema)
+module.exports=dislikeModel;
