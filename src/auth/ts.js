@@ -1,4 +1,4 @@
-const STATUSCODES = require('http-status-codes')
+const { StatusCodes } = require('http-status-codes')
 
 const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
@@ -14,7 +14,7 @@ require('dotenv').config()
 
 exports.register = catchAsync(async (req, res) => {
 
-    const {firstname, lastname, username, email, phonenumber, gender, password, profilepicurl } = req.body;
+    const { firstname, lastname, username, email, phonenumber, gender, password, profilepicurl } = req.body;
     const newUser = await createUser({
         firstname, lastname, username, email, phonenumber, gender, password, profilepicurl, usertype: CONSTANTS.ACCOUNT_TYPES.USER
     })
@@ -23,26 +23,28 @@ exports.register = catchAsync(async (req, res) => {
     await welcomeMail(newUser.username, newUser.email)
     newUser.password = undefined;
 
-    res.status(STATUSCODES.CREATED).json({
+    res.status( StatusCodes.CREATED ).json({
         newUser,
-    })
+    }) 
 })
 
-exports.login = catchAsync(async(req, res) => {
-    const {email, password} = req.body;
-    
-    const user = await getUser({email: email})
+exports.login = catchAsync( async( req, res ) => {
+    const { email, password } = req.body;
+    const user = await getUser({ email: email })
 
-    if (!user || !(await user.correctPassword(password, user.password))){
-        throw new AppError(CONSTANTS.MESSAGE.ERROR.LOGIN, STATUSCODES.BAD_REQUEST)
+    if ( !user || !( await user.correctPassword(password, user.password ))){
+        throw new AppError( CONSTANTS.MESSAGE.ERROR.LOGIN, StatusCodes.BAD_REQUEST )
     }
 
-    /*Create token and assign to cookie*/
-    const token = HELPER.signtoken(user._id);
-    HELPER.setCookies(res, CONSTANTS.TOKEN.NAME ,token);
+    if( user.isSuspended){
+        throw new AppError('This account was supspended, please contact Admin!', StatusCodes.FORBIDDEN )
+    }
+
+    const token = HELPER.signtoken( user._id );
+    HELPER.setCookies( res, CONSTANTS.TOKEN.NAME ,token );
 
     user.password = undefined;
-    res.status(STATUSCODES.OK).json({
+    res.status( StatusCodes.OK ).json({
         status: true,
         msg: "Login successful",
         user
@@ -50,10 +52,10 @@ exports.login = catchAsync(async(req, res) => {
 
 })
 
-exports.logout = catchAsync( async(req, res) => {
+exports.logout = catchAsync( async( req, res ) => {
 
-    HELPER.clearCookies(res, CONSTANTS.TOKEN.NAME )
-    res.status(STATUSCODES.OK).json({
+    HELPER.clearCookies( res, CONSTANTS.TOKEN.NAME )
+    res.status( StatusCodes.OK ).json({
         status: true,
         msg: "Logout Successful!"
     })
@@ -62,11 +64,11 @@ exports.logout = catchAsync( async(req, res) => {
 
 exports.forgotPassword = catchAsync( async( req, res) => {
 
-    const {email} = req.body;
-    const user = await getUser({email: email})
+    const { email } = req.body;
+    const user = await getUser({ email: email })
 
     if (!user){
-        throw new AppError('User doesn\'t exist!', STATUSCODES.BAD_REQUEST)
+        throw new AppError( 'User doesn\'t exist!', StatusCodes.BAD_REQUEST )
     }
 
     const resetToken = user.createResetPasswordToken()
@@ -75,7 +77,7 @@ exports.forgotPassword = catchAsync( async( req, res) => {
     const resetURl = `${CONSTANTS.LINKS.RESETPASSWORD}${resetToken}`
     try{
         await passwordResetMail(user.username, user.email, resetURl)
-        res.status(STATUSCODES.OK).json({
+        res.status( StatusCodes.OK ).json({
             status: true,
             msg: 'Token sent to email!'
         })
@@ -92,16 +94,16 @@ exports.forgotPassword = catchAsync( async( req, res) => {
 
 exports.resetPassword = catchAsync( async( req, res ) => {
 
-    const {password} = req.body;
+    const { password } = req.body;
 
-    const hashedToken = HELPER.hashToken(req.params.token)
+    const hashedToken = HELPER.hashToken( req.params.token )
     const user = await getUser({
         passwordResetToken: hashedToken,
         passwordResetExpires: { $gt: Date.now() }
     })
 
     if (!user){
-        throw new AppError('Token is invalid or expired!', STATUSCODES.BAD_REQUEST)
+        throw new AppError('Token is invalid or expired!', StatusCodes.BAD_REQUEST)
     }
 
     user.password = password
@@ -109,7 +111,7 @@ exports.resetPassword = catchAsync( async( req, res ) => {
     user.passwordResetExpires = undefined
     await user.save()
 
-    res.status(STATUSCODES.OK).json({
+    res.status( StatusCodes.OK ).json({
         status: true,
         msg: "Password updated successfully!"
     })
@@ -118,23 +120,23 @@ exports.resetPassword = catchAsync( async( req, res ) => {
 
 exports.adminSignup = catchAsync( async( req, res) => {
 
-    const {firstname, lastname, username, email, phonenumber, gender, password, profilepicurl } = req.body;
+    const { firstname, lastname, username, email, phonenumber, gender, password, profilepicurl } = req.body;
     const newAdmin = await createUser({
         firstname, lastname, username, email, phonenumber, gender, password, profilepicurl, usertype: CONSTANTS.ACCOUNT_TYPES.ADMIN
     })
 
     newAdmin.password = undefined
     try{
-        await adminWelcome(newAdmin.username, newAdmin.email)
-        res.status(STATUSCODES.CREATED).json({
+        await adminWelcome( newAdmin.username, newAdmin.email )
+        res.status( StatusCodes.CREATED ).json({
             status: true,
             newAdmin,
         })
 
     }
     catch(err){
-        await deleteUser(newAdmin._id)
-        throw new AppError('An error occured, Try again!', STATUSCODES.BAD_REQUEST)
+        await deleteUser( newAdmin._id )
+        throw new AppError( 'An error occured, Try again!', StatusCodes.BAD_REQUEST )
     }
     
 })
