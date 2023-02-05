@@ -16,5 +16,5 @@ const likeSchema = new Schema({
     }
 })
 
-const likeSchema1 = mongoose.model('like', likeSchema)
-module.exports = likeSchema1
+const likeModel = mongoose.model('like', likeSchema)
+module.exports = likeModel;
