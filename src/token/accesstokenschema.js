@@ -18,5 +18,5 @@ spotifySchema.pre('save', async function(){
     this.expires = Date.now() + 3600 * 1000;
 })
 
-const spotifyAccessToken = mongoose.model('accesstoken', spotifySchema)
-module.exports = spotifyAccessToken;
+const spotifyAccessTokenModel = mongoose.model('accesstoken', spotifySchema)
+module.exports = spotifyAccessTokenModel;
