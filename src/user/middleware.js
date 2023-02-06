@@ -4,6 +4,7 @@ const AppError = require('../utils/appError')
 const CONSTANTS = require('../constants/ts')
 const { getUser } = require('../auth/authservices')
 const HELPER = require('../utils/helper')
+const catchAsync = require('../utils/catchAsync')
 
 exports.validateId = catchAsync( async( req, res, next ) => {
     const id = req.params.id;
@@ -15,28 +16,28 @@ exports.validateId = catchAsync( async( req, res, next ) => {
     next();
 }) 
 
-exports.checkToken = async( req, res, next ) => {
-    const token = req.cookies.jwt_token;
-    if ( !token ){
-        throw new AppError( 'You are not logged in!', StatusCodes.FORBIDDEN )
+exports.checkToken = catchAsync(async (req, res, next) => {
+    const token = req.cookies.jwt_token
+    if (!token) {
+        throw new AppError('You are not logged in!', StatusCodes.FORBIDDEN)
     }
 
-    const userId = ( await HELPER.decodeToken( token ) ).id;
-    if ( !userId ){
-        throw new AppError( 'Invalid token!', StatusCodes.FORBIDDEN )
+    const userId = (await HELPER.decodeToken(token)).id
+    if (!userId) {
+        throw new AppError('Invalid token!', StatusCodes.FORBIDDEN)
     }
 
-    req.user = userId;
+    req.user = userId
     next()
-}
+})
 
-exports.protect = async( req, res, next) => {
-    const userId = req.user;
+exports.protect = catchAsync(async (req, res, next) => {
+    const userId = req.user
 
-    const user = await getUser( { id: userId } )
-    if (user.usertype === CONSTANTS.ACCOUNT_TYPES.USER){
-        throw new AppError( 'Unauthorized action', StatusCodes.UNAUTHORIZED )
+    const user = await getUser({ id: userId })
+    if (user.usertype === CONSTANTS.ACCOUNT_TYPES.USER) {
+        throw new AppError('Unauthorized action', StatusCodes.UNAUTHORIZED)
     }
 
-    next();
-}
+    next()
+})
