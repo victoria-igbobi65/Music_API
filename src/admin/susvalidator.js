@@ -17,6 +17,7 @@ const reasonSchema = joi.object().keys({
         .string()
         .min(2)
         .max(255)
+        .required()
         .error(new Error('Reason for suspension is required!')),
     
 })
