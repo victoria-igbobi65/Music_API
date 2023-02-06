@@ -21,11 +21,19 @@ const deleteaPlaylist = async( id ) => {
 }
 
 /* Delete a song from a playlist */
+const deleteaSong = async( playlistDetailsObject, songIdObject ) => {
+    return Playlist.updateOne(playlistDetailsObject, {$pull: {tracks: songIdObject}})
+}
 
+const updateaPlaylist = async( playlistDetails, songObject ) => {
+    return Playlist.updateOne( playlistDetails, {$push: { tracks: songObject }})
+}
 
 module.exports = {
     createaPlaylist,
     getaPlaylist,
     getPlaylists,
-    deleteaPlaylist
+    deleteaPlaylist,
+    deleteaSong,
+    updateaPlaylist
 }
