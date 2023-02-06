@@ -14,9 +14,9 @@ const playlistSchema = new Schema({
         required: [true, 'Playlist name required!'],
     },
     tracks:[{
-        type: mongoose.Types.ObjectId,
+        body: mongoose.Types.ObjectId,
     }]
-})
+}, { timestamps: true })
 
 
 const playlistModel = mongoose.model('playlist', playlistSchema)
