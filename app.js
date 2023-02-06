@@ -8,6 +8,7 @@ const globalErrorhandler = require('./src/utils/errors')
 const authRoute = require('./src/auth/authroute')
 const userRoute = require('./src/user/userRoute')
 const trackRoute = require('./src/tracks/trackroute')
+const meRoute = require('./src/me/router')
 const app = express()
 
 app.use(express.json())
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 app.use('/auth/', authRoute)
 app.use('/user', userRoute)
 app.use('/track', trackRoute)
+app.use('/me', meRoute)
 
 
 /* ERROR HANDLERS */
