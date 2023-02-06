@@ -12,15 +12,21 @@ const validateBody = (schema) => {
     }
 }
 
-const createPlaylistSchema = joi.object().keys({
+
+const playlistSchema = joi.object().keys({
     name: joi
         .string()
         .min(1)
-        .max(255)
-        .error(new Error('Playlist name is required!')),
+        .max(100)
+        .required()
+        .error(new Error('Provide playlist name!')),
     
 })
 
-const validatecreatePlaylist = validateBody(createPlaylistSchema)
 
-module.exports = validatecreatePlaylist;
+const validatePlaylistBody = validateBody( playlistSchema )
+
+
+module.exports = {
+    validatePlaylistBody
+}
