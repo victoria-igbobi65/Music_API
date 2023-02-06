@@ -6,6 +6,10 @@ const prodValidationError = (err) => {
     return new AppError(err.message, 400)
 }
 
+const handleTypeError = (err) => {
+    return new AppError(err.message, 400)
+}
+
 /*Defined Error 1*/
 const handleCastErrorDB = (err) => {
     const message = `Invalid ${err.path}: ${err.value}`
@@ -22,6 +26,7 @@ const handleDuplicateFieldsDb = (err) => {
 
 /*Development error handler*/
 const devHandler = (err, req, res, next) => {
+
     const statusCode = err.statusCode || 500
     const status = err.status || 'error'
     res.status(statusCode).json({
@@ -32,7 +37,6 @@ const devHandler = (err, req, res, next) => {
 
 /*Production error handler*/
 var prodHandler = (err, req, res, next) => {
-    console.log(err)
 
     /*Defined Errors*/
     if (err.name === 'ValidationError') {
@@ -43,6 +47,10 @@ var prodHandler = (err, req, res, next) => {
     }
     if (err.code === 11000) {
         err = handleDuplicateFieldsDb(err)
+    }
+
+    if (err.name === "TypeError"){
+        err = handleTypeError(err)
     }
 
     /*Response Handler for defined errors*/
