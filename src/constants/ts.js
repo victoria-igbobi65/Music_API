@@ -37,6 +37,7 @@ module.exports = {
         RESETPASSWORD: 'http://localhost:5000/auth/resetPassword/',
         SPOTIFYACCESSTOKENBASEURL: 'https://accounts.spotify.com/api/token',
         SPOTIFYREQUESTBASEURL: 'https://api.spotify.com/v1/',
+        APPBASEURL: 'http://localhost:5000/',
     },
     TOKEN: {
         NAME: 'jwt_token',
