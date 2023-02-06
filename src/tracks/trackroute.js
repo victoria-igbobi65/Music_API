@@ -7,26 +7,34 @@ const trackMiddleware = require('./middleware')
 const router = express.Router()
 
 router
-    .route('/:id/like')
-    .get(userMiddleware.checkToken, trackMiddleware.validateTrackId, trackController.likeaTrack)
+    .route('/new-releases')
+    .get(trackController.getNewRealease)
 
 router
-    .route('/:id/share')
+    .route('/:trackid/like')
+    .post(userMiddleware.checkToken, trackMiddleware.validateTrackId, trackController.likeaTrack)
+
+router
+    .route('/:trackid/share')
     .get(trackMiddleware.validateTrackId, trackController.shareaTrack)
 
 
 router
-    .route('/:id/unlike')
-    .get(userMiddleware.checkToken, trackMiddleware.validateTrackId, trackController.unlikeaTrack)
+    .route('/:trackid/unlike')
+    .delete(userMiddleware.checkToken, trackMiddleware.validateTrackId, trackController.unlikeaTrack)
 
 
 router
-    .route('/:id/unlike')
-    .get(userMiddleware.checkToken, trackMiddleware.validateTrackId, trackController.dislikeaTrack)
-router
-    .route('/:id')
-    .get(trackMiddleware.validateTrackId, trackController.getaTrack)
+    .route('/:trackid/dislike')
+    .post(userMiddleware.checkToken, trackMiddleware.validateTrackId, trackController.dislikeaTrack)
 
+
+router
+    .route('/:id/related')
+    .get( trackController.getRelatedTracks )
+router
+    .route('/:trackid')
+    .get(trackController.getaTrack)
 
 
 module.exports=router;
