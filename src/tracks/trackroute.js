@@ -6,9 +6,14 @@ const trackMiddleware = require('./middleware')
 
 const router = express.Router()
 
+
+router
+    .route('/albums/:albumid')
+    .get( trackController.albumTracks )
+
 router
     .route('/new-releases')
-    .get(trackController.getNewRealease)
+    .get( trackController.getNewRealease )
 
 router
     .route('/:trackid/like')
@@ -32,6 +37,11 @@ router
 router
     .route('/:id/related')
     .get( trackController.getRelatedTracks )
+
+router
+    .route('/')
+    .get(trackController.getTracks)
+
 router
     .route('/:trackid')
     .get(trackController.getaTrack)
