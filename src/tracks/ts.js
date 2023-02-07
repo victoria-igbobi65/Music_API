@@ -122,3 +122,32 @@ exports.getNewRealease = catchAsync( async( req, res) => {
     })
 
 })
+
+exports.getTracks = catchAsync( async( req, res ) => {
+
+    const query = HELPER.randomLetter();
+    const url = `${CONSTANTS.LINKS.SPOTIFYREQUESTBASEURL}search?q=${query}&type=track`
+    const tracks = await apiCall( url )
+
+    if ( tracks.error){
+        throw new AppError('An error occurred!', tracks.error.status)
+    }
+
+    res.status(200).json({
+        nbhits: tracks.tracks.items.length,
+        tracks,
+    })
+})
+
+
+exports.albumTracks = catchAsync(async (req, res) => {
+    const albumId = req.params.albumid
+    const url = `${CONSTANTS.LINKS.SPOTIFYREQUESTBASEURL}albums/${albumId}/tracks`
+    const tracks = await apiCall(url)
+
+    res.status(StatusCodes.OK).json({
+        status: true,
+        nbhits: tracks.items.length,
+        tracks,
+    })
+})
