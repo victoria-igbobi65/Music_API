@@ -71,3 +71,9 @@ exports.destructureObject = ( object ) => {
     }
 }
 
+exports.randomLetter = () => {
+    const alphabets = 'abcdefghijklmnopqrstuvwxyz0123456789'.split('')
+    return alphabets[ Math.floor( Math.random() * 36 ) ]
+
+}
+
