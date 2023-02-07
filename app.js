@@ -9,13 +9,16 @@ const authRoute = require('./src/auth/authroute')
 const userRoute = require('./src/user/userRoute')
 const trackRoute = require('./src/tracks/trackroute')
 const meRoute = require('./src/me/router')
+const artistRoute = require('./src/artists/routes')
+const categoryRoute = require('./src/category/routes')
 const app = express()
+
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
-
 app.use(logger('dev'));
 app.use(cookieParser());
+
 
 /* ENDPOINTS */
 app.get('/', (req, res) => {
@@ -27,6 +30,9 @@ app.use('/auth/', authRoute)
 app.use('/user', userRoute)
 app.use('/track', trackRoute)
 app.use('/me', meRoute)
+app.use('/artist', artistRoute)
+app.use('/category', categoryRoute)
+
 
 
 /* ERROR HANDLERS */
