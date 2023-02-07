@@ -5,6 +5,7 @@ const {createAccessToken, getAccessToken} = require('./services')
 
 
 async function getSpotifyTokenCallback() {
+    const qs = { market: 'US' }
     return new Promise((resolve, reject) => {
         request.post(
             {
