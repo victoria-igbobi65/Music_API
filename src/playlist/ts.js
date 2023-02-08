@@ -1,9 +1,11 @@
 const { StatusCodes } = require('http-status-codes');
 
 const CONSTANTS = require('../constants/ts')
+const HELPER = require('../utils/helper')
 const catchAsync = require('../utils/catchAsync')
-const { getTrackId } = require('../tracks/trackservices')
-const { createaPlaylist, getPlaylists, deleteaPlaylist, getaPlaylist, deleteaSong } = require('./playlistservices')
+const { getTrackId, createTrack } = require('../tracks/trackservices')
+const { createaPlaylist, getPlaylists, deleteaPlaylist, getaPlaylist, updateaPlaylist } = require('./playlistservices');
+const AppError = require('../utils/appError');
 
 
 exports.newPlayList = catchAsync( async( req, res ) => {
@@ -23,7 +25,7 @@ exports.newPlayList = catchAsync( async( req, res ) => {
 exports.getallPlaylists = catchAsync( async( req, res ) => {
 
     const userId = req.user;
-    const Playlists = await getPlaylists( { ownerid: userId } )
+    const Playlists = await getPlaylists( { ownerid: userId }, HELPER.buildQueryObject( req.query ) )
 
     res.status(StatusCodes.OK).json({
         status: true,
@@ -63,13 +65,28 @@ exports.addaTrackToPlaylist = catchAsync( async( req, res ) => {
     const trackId = req.params.trackid;
     const playlistId = req.params.id;
 
-    const track = await getTrackId( { trackid: trackId })
+    /* Query our music database for the song ID */
+    let song = await getTrackId( { trackid: trackId } );
 
-    /* Getting and saving song to the playlist*/
-    const playlist = await getaPlaylist( { ownerid: userId, _id: playlistId });
-    playlist.tracks.push(track.id)
-    await playlist.save()
+    if (!song){
+        const url = `${CONSTANTS.LINKS.SPOTIFYREQUESTBASEURL}tracks/${trackId}`
+        const track = await apiCall(url)
 
+        if (track.error){
+            throw new AppError('An error occurred!', StatusCodes.BAD_REQUEST)
+        }
+        const object = HELPER.destructureObject(track)
+        song = await createTrack( object )
+    }
+
+    /* Fetch desired playlist */
+    const playlist = await getaPlaylist({ ownerid: userId, _id: playlistId })
+
+    if (!playlist.tracks.some((track) => track._id.equals( HELPER.convertToMongooseObject( song._id )))){
+        playlist.tracks.push(song._id)
+        await playlist.save()
+    }
+    
     res.status(StatusCodes.OK).json({
         status: true,
         playlist
@@ -77,16 +94,33 @@ exports.addaTrackToPlaylist = catchAsync( async( req, res ) => {
 
 })
 
-// exports.deleteaSongFromPlaylist = catchAsync( async( req, res ) => {
-//     const userId = req.user;
-//     const playlistId = req.params.id;
-//     const trackId = req.params.trackid;
+exports.deleteaSongFromPlaylist = catchAsync( async( req, res ) => {
+    const userId = req.user;
+    const playlistId = req.params.id;
+    const trackId = req.params.trackid;
 
-//     const track = (await getTrackId({ trackid: trackId })).id;
-//     console.log(track)
-//     const updated = await deleteaSong( {ownerid: userId, id: playlistId}, {body: track})
+    const track = await getTrackId({ trackid: trackId })
+    await updateaPlaylist( { _id: playlistId }, { $pull: { tracks: { _id: track._id } } } )
+    const playlist = await getaPlaylist({ ownerid: userId, _id: playlistId })
+   
+     res.status( StatusCodes.OK ).json({
+        status: true,
+        playlist
+        
+     })
+})
 
-    
+exports.deleteallSongsFromPlaylist = catchAsync( async( req, res) => {
 
-// })
+    const playlistId = req.params.id
+    const userId = req.user;
+
+    await updateaPlaylist({ _id: playlistId }, { $set: { tracks: []}})
+    const playlist = await getaPlaylist({ ownerid: userId, _id: playlistId })
+
+    res.status( StatusCodes.OK ).json({
+        status: true,
+        playlist
+    })
+})
 
