@@ -6,8 +6,8 @@ const createaPlaylist = async( object ) => {
     return newPlaylist;
 }
 
-const getPlaylists = async( object ) => {
-    const playlists = Playlist.find( object )
+const getPlaylists = async( object, sortBy ) => {
+    const playlists = Playlist.find( object ).sort( sortBy )
     return playlists
 }
 
@@ -20,13 +20,8 @@ const deleteaPlaylist = async( id ) => {
     return Playlist.findByIdAndDelete(id)
 }
 
-/* Delete a song from a playlist */
-const deleteaSong = async( playlistDetailsObject, songIdObject ) => {
-    return Playlist.updateOne(playlistDetailsObject, {$pull: {tracks: songIdObject}})
-}
-
 const updateaPlaylist = async( playlistDetails, songObject ) => {
-    return Playlist.updateOne( playlistDetails, {$push: { tracks: songObject }})
+    return Playlist.updateOne( playlistDetails, songObject )
 }
 
 module.exports = {
@@ -34,6 +29,5 @@ module.exports = {
     getaPlaylist,
     getPlaylists,
     deleteaPlaylist,
-    deleteaSong,
     updateaPlaylist
 }
