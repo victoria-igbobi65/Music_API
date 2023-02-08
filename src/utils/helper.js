@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken')
 const CONSTANTS = require('../constants/ts')
 const crypto = require('crypto')
 const {promisify} = require('util')
+const mongoose  = require('mongoose')
+const { object } = require('joi')
 require('dotenv').config()
 
 
@@ -75,5 +77,23 @@ exports.randomLetter = () => {
     const alphabets = 'abcdefghijklmnopqrstuvwxyz0123456789'.split('')
     return alphabets[ Math.floor( Math.random() * 36 ) ]
 
+}
+
+exports.convertToMongooseObject = ( string ) => {
+
+    return mongoose.Types.ObjectId( string )
+}
+
+exports.buildQueryObject = ( object ) => {
+
+    let sortBy;
+    if (object.sort){
+        sortBy = object.sort.split(',').join(" ")
+    }
+    else{
+        sortBy = '-createdAt'
+    }
+
+    return sortBy;
 }
 
