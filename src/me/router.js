@@ -14,9 +14,9 @@ router
     .post( userMiddleware.checkToken, playlistMiddleware.validateId, trackMiddleware.validateTrackId, playlistController.addaTrackToPlaylist)
 
 
-// router
-//     .route('/playlist/:id/track/:trackid')
-//     .delete( userMiddleware.checkToken, playlistMiddleware.validateId, trackMiddleware.validateTrackId, playlistController.deleteaSongFromPlaylist)
+router
+    .route('/playlist/:id/track/:trackid')
+    .delete( userMiddleware.checkToken, playlistMiddleware.validateId, trackMiddleware.validateTrackId, playlistController.deleteaSongFromPlaylist)
 
 router
     .route('/playlist')
@@ -27,5 +27,6 @@ router
     .route('/playlist/:id')
     .delete( userMiddleware.checkToken, playlistMiddleware.validateId, playlistController.deletePlaylist)
     .get( userMiddleware.checkToken, playlistMiddleware.validateId, playlistController.getplaylist)
+    .patch( userMiddleware.checkToken, playlistMiddleware.validateId, playlistController.deleteallSongsFromPlaylist )
 
 module.exports = router;
