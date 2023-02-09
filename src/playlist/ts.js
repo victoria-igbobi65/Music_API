@@ -3,7 +3,7 @@ const { StatusCodes } = require('http-status-codes');
 const CONSTANTS = require('../constants/ts')
 const HELPER = require('../utils/helper')
 const catchAsync = require('../utils/catchAsync')
-const { getTrackId, createTrack } = require('../tracks/trackservices')
+const { getTrackId, createTrack, apiCall } = require('../tracks/trackservices')
 const { createaPlaylist, getPlaylists, deleteaPlaylist, getaPlaylist, updateaPlaylist } = require('./playlistservices');
 const AppError = require('../utils/appError');
 
@@ -124,3 +124,32 @@ exports.deleteallSongsFromPlaylist = catchAsync( async( req, res) => {
     })
 })
 
+
+exports.getFeaturedPlaylist = catchAsync( async( req, res) => {
+    const url = `${CONSTANTS.LINKS.SPOTIFYREQUESTBASEURL}browse/featured-playlists`
+    const featured = await apiCall( url )
+
+    if (featured.error){
+        throw new AppError( featured.error.message, featured.error.status)
+    }
+
+    res.status( StatusCodes.OK ).json({
+        status: true,
+        nhbits:featured.playlists.items.length,
+        featured
+    })
+})
+
+
+exports.getalltracksinPlaylist = catchAsync( async(req, res) => {
+
+    const playlistId = req.params.id;
+    const url = `${CONSTANTS.LINKS.SPOTIFYREQUESTBASEURL}playlists/${playlistId}/tracks`
+    const tracks = await apiCall( url )
+
+    res.status( StatusCodes.OK ).json({ 
+        status: true,
+        nhbits: tracks.items.length,
+        tracks
+    })
+})
