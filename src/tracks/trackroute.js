@@ -1,11 +1,16 @@
 const express = require('express')
 
 const trackController = require('./ts')
+const playlistController = require('../playlist/ts')
 const userMiddleware = require('../user/middleware')
 const trackMiddleware = require('./middleware')
 
 const router = express.Router()
 
+
+router
+    .route('/playlist/:id')
+    .get( playlistController.getalltracksinPlaylist )
 
 router
     .route('/albums/:albumid')
@@ -44,7 +49,7 @@ router
 
 router
     .route('/:trackid')
-    .get(trackController.getaTrack)
+    .get( userMiddleware.checkToken ,trackController.getaTrack)
 
 
 module.exports=router;
