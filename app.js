@@ -11,6 +11,7 @@ const trackRoute = require('./src/tracks/trackroute')
 const meRoute = require('./src/me/router')
 const artistRoute = require('./src/artists/routes')
 const categoryRoute = require('./src/category/routes')
+const rootRoute = require('./src/general/routes')
 const app = express()
 
 
@@ -21,17 +22,14 @@ app.use(cookieParser());
 
 
 /* ENDPOINTS */
-app.get('/', (req, res) => {
-    res.status(200).json({
-        msg: "WELCOME TO MY MUSIC APP API!"
-    })
-})
+
 app.use('/auth/', authRoute)
 app.use('/user', userRoute)
 app.use('/track', trackRoute)
 app.use('/me', meRoute)
 app.use('/artist', artistRoute)
 app.use('/category', categoryRoute)
+app.use('/', rootRoute)
 
 
 
