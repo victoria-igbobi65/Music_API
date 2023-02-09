@@ -7,6 +7,7 @@ const HELPER = require('../utils/helper')
 const { apiCall, createTrack, getTrackId } = require('./trackservices')
 const { createLike, deleteLike } = require('../features/likeservices');
 const { createDislike } = require('../features/dislikeservices');
+const { createPlay } = require('./playservices')
 const AppError = require('../utils/appError');
 
 
@@ -14,6 +15,7 @@ const AppError = require('../utils/appError');
 exports.getaTrack = catchAsync( async( req, res ) => {
     
     const trackId = req.params.trackid;
+    const userId = req.user;
     
     const url = `${CONSTANTS.LINKS.SPOTIFYREQUESTBASEURL}tracks/${trackId}`;
     const track = await apiCall(url);
@@ -23,7 +25,8 @@ exports.getaTrack = catchAsync( async( req, res ) => {
     }
 
     const object = HELPER.destructureObject({ ...track })
-    await createTrack(object) 
+    const song = await createTrack(object)
+    await createPlay({ userid: userId, trackid: song._id }) 
     
     res.status(StatusCodes.OK).json({
         track,
@@ -151,3 +154,4 @@ exports.albumTracks = catchAsync(async (req, res) => {
         tracks,
     })
 })
+
