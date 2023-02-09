@@ -1,6 +1,7 @@
 const express = require('express')
 
 const playlistController = require('../playlist/ts')
+const playController = require('./ts')
 const userMiddleware = require('../user/middleware')
 const playlistMiddleware = require('../playlist/middleware')
 const trackMiddleware = require('../tracks/middleware')
@@ -8,16 +9,23 @@ const trackMiddleware = require('../tracks/middleware')
 const { validatePlaylistBody } = require('../playlist/playlistvalidator')
 const router = express.Router();
 
+router
+    .route('/track/frequent')
+    .get( userMiddleware.checkToken, playController.getmyfrequentTracks )
 
 router
-    .route('/playlist/:id/track/:trackid')
-    .post( userMiddleware.checkToken, playlistMiddleware.validateId, trackMiddleware.validateTrackId, playlistController.addaTrackToPlaylist)
+    .route('/track/like')
+    .get( userMiddleware.checkToken, playController.allmyLikedTracks )
 
+router
+    .route('/plays')
+    .get( userMiddleware.checkToken, playController.allMyPlayedTracks)
 
 router
     .route('/playlist/:id/track/:trackid')
     .delete( userMiddleware.checkToken, playlistMiddleware.validateId, trackMiddleware.validateTrackId, playlistController.deleteaSongFromPlaylist)
-
+    .post( userMiddleware.checkToken, playlistMiddleware.validateId, trackMiddleware.validateTrackId, playlistController.addaTrackToPlaylist)
+ 
 router
     .route('/playlist')
     .post( userMiddleware.checkToken, validatePlaylistBody, playlistController.newPlayList)
