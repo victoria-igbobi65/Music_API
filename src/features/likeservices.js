@@ -12,7 +12,11 @@ const deleteLike = async( object ) => {
 }
 
 const getLike = async( object ) => {
-    const doc = Like.findOne( object )
+    const doc = Like
+        .find( object )
+        .populate("songid")
+        .select({ _id: 0, __v: 0, userid: 0 })
+
     return doc
 }
 
