@@ -26,7 +26,7 @@ exports.getaTrack = catchAsync( async( req, res ) => {
 
     const object = HELPER.destructureObject({ ...track })
     const song = await createTrack(object)
-    await createPlay({ userid: userId, trackid: song._id }) 
+    await createPlay({ userid: userId, trackid: song }) 
     
     res.status(StatusCodes.OK).json({
         track,
@@ -37,11 +37,11 @@ exports.getaTrack = catchAsync( async( req, res ) => {
 
 
 exports.likeaTrack = catchAsync( async( req, res) => {
-
-    const id = await getTrackId( { trackid: req.params.trackid} )
     const userId = req.user;
 
-    await createLike( { songid: id, userid: userId } );
+    const song = await getTrackId( { trackid: req.params.trackid} )
+    await createLike( { songid: song._id, userid: userId } );
+
     res.status(StatusCodes.OK).json({
         status: true,
         msg: null
@@ -79,10 +79,10 @@ exports.unlikeaTrack = catchAsync( async( req, res) => {
 
 exports.dislikeaTrack = catchAsync( async( req, res ) => {
 
-    const id = await getTrackId({ trackid: req.params.trackid })
     const userId = req.user
+    const song = await getTrackId({ trackid: req.params.trackid })
 
-    await createDislike({ songid: id, userid: userId })
+    await createDislike({ songid: song._id, userid: userId })
     res.status(StatusCodes.OK).json({
         status: true,
         msg: null,
