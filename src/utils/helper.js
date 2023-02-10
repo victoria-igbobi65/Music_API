@@ -84,8 +84,9 @@ exports.convertToMongooseObject = ( string ) => {
     return mongoose.Types.ObjectId( string )
 }
 
-exports.buildQueryObject = ( object ) => {
+exports.buildQueryObject = ( userId, object ) => {
 
+    let obj = { ownerid: userId }
     let sortBy;
     if (object.sort){
         sortBy = object.sort.split(',').join(" ")
@@ -93,7 +94,17 @@ exports.buildQueryObject = ( object ) => {
     else{
         sortBy = '-createdAt'
     }
+    if (object.q){
+        obj.name = { $regex: object.q, $options: 'i' }
+    }
 
-    return sortBy;
+    return { sortBy, obj };
+}
+
+exports.destructure = async( array ) => {
+    const arr = await array;
+    const ids = arr.map( item => item.track.trackid )
+    return [...ids].join(",");
+
 }
 
