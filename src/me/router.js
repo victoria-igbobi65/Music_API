@@ -10,6 +10,10 @@ const { validatePlaylistBody } = require('../playlist/playlistvalidator')
 const router = express.Router();
 
 router
+    .route('/recommendations')
+    .get( userMiddleware.checkToken, playController.myRecommendations )
+
+router
     .route('/track/frequent')
     .get( userMiddleware.checkToken, playController.getmyfrequentTracks )
 
@@ -24,7 +28,7 @@ router
 router
     .route('/playlist/:id/track/:trackid')
     .delete( userMiddleware.checkToken, playlistMiddleware.validateId, trackMiddleware.validateTrackId, playlistController.deleteaSongFromPlaylist)
-    .post( userMiddleware.checkToken, playlistMiddleware.validateId, trackMiddleware.validateTrackId, playlistController.addaTrackToPlaylist)
+    .post( userMiddleware.checkToken, trackMiddleware.validateTrackId, playlistMiddleware.validateId, trackMiddleware.validateTrackId, playlistController.addaTrackToPlaylist)
  
 router
     .route('/playlist')
