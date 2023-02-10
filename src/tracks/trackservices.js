@@ -35,10 +35,10 @@ const createTrack = async( object ) => {
 
     const track = await Track.findOne({ trackid: object.trackid})
     if ( !track ){
-        const newTrack = await Track.create( object )
-        return newTrack;
+        const newTrack = Track.create( object )
+        return (await newTrack)._id;
     }
-    return 
+    return track._id;
 }
 
 const deleteTrack = async( id ) => {
@@ -48,7 +48,7 @@ const deleteTrack = async( id ) => {
 }
 
 const getTrackId = async( object ) => {
-    const track = Track.findOne( object );
+    const track = await Track.findOne( object );
     return track;
 }
 
