@@ -33,8 +33,8 @@ exports.checkToken = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
     const userId = req.user
-
-    const user = await getUser({ id: userId })
+    const user = await getUser({ _id: userId })
+    
     if (user.usertype === CONSTANTS.ACCOUNT_TYPES.USER) {
         throw new AppError('Unauthorized action', StatusCodes.UNAUTHORIZED)
     }
