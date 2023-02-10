@@ -12,6 +12,7 @@ module.exports = {
 
     ACCOUNT_STATUS: {
         SUSPENDED: true,
+        NOTSUSPENDED: false
     },
 
     MESSAGE: {
