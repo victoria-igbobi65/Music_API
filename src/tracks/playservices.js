@@ -28,13 +28,23 @@ const getPlay = async( userId ) => {
             }
         },
 
-        // {
-        //     $lookup: {
-        //         from: 'track',
-        //         localField: _id,
-        //         foreignField: 
-        //     }
-        // }
+        {
+            $lookup: {
+                from: 'tracks',
+                localField: "_id",
+                foreignField: "_id",
+                as: "track"
+            }
+        },
+        {
+            $unwind: "$track"
+        },
+        {
+            $project: { _id: 0 }
+        },
+        {
+            $sort: { count: -1}
+        }
     ])
     return docs;
 }
