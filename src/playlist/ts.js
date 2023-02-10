@@ -25,7 +25,9 @@ exports.newPlayList = catchAsync( async( req, res ) => {
 exports.getallPlaylists = catchAsync( async( req, res ) => {
 
     const userId = req.user;
-    const Playlists = await getPlaylists( { ownerid: userId }, HELPER.buildQueryObject( req.query ) )
+    const object = HELPER.buildQueryObject( userId, { ...req.query })
+
+    const Playlists = await getPlaylists( object.obj, object.sortBy)
 
     res.status(StatusCodes.OK).json({
         status: true,
@@ -65,21 +67,7 @@ exports.addaTrackToPlaylist = catchAsync( async( req, res ) => {
     const trackId = req.params.trackid;
     const playlistId = req.params.id;
 
-    /* Query our music database for the song ID */
-    let song = await getTrackId( { trackid: trackId } );
-
-    if (!song){
-        const url = `${CONSTANTS.LINKS.SPOTIFYREQUESTBASEURL}tracks/${trackId}`
-        const track = await apiCall(url)
-
-        if (track.error){
-            throw new AppError('An error occurred!', StatusCodes.BAD_REQUEST)
-        }
-        const object = HELPER.destructureObject(track)
-        song = await createTrack( object )
-    }
-
-    /* Fetch desired playlist */
+    const song = await getTrackId( { trackid: trackId } );
     const playlist = await getaPlaylist({ ownerid: userId, _id: playlistId })
 
     if (!playlist.tracks.some((track) => track._id.equals( HELPER.convertToMongooseObject( song._id )))){
