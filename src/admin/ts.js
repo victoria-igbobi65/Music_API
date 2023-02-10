@@ -11,13 +11,26 @@ exports.suspendUser = catchAsync(async (req, res) => {
     const userId = req.params.id;
     const { reason } = req.body;
 
-    const user = await getUser({ id: userId })
+    const user = await getUser({ _id: userId })
     user.isSuspended = CONSTANTS.ACCOUNT_STATUS.SUSPENDED;
     await user.save()
 
     await createSuspend( { userid: userId, reasons: reason})
-    res.status( StatusCodes.OK).jsond({
+    res.status( StatusCodes.OK).json({
         status: true,
         msg: null
+    })
+})
+
+exports.unsuspendUser = catchAsync( async( req, res) => {
+    const userId = req.params.id;
+
+    const user = await getUser( { _id: userId} )
+    user.isSuspended = CONSTANTS.ACCOUNT_STATUS.NOTSUSPENDED;
+    await user.save();
+
+    res.status( StatusCodes.OK ).json({
+        status: true,
+        message: null
     })
 })
