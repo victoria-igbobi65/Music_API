@@ -20,8 +20,51 @@ const getLike = async( object ) => {
     return doc
 }
 
+const getIds = async( id ) => {
+    const ids = Like.aggregate([
+        {
+            $match: {
+                userid: id,
+            },
+        },
+        {
+            $lookup: {
+                from: 'tracks',
+                localField: 'songid',
+                foreignField: '_id',
+                as: 'track',
+            },
+        },
+
+        {
+            $unwind: '$track',
+        },
+
+        {
+            $project: {
+                userid: 0,
+                songid:0,
+                __v: 0,
+                _id: 0,
+                "track.name":0,
+                "track._id": 0,
+                "track.images": 0,
+                "track.releasedate": 0,
+                "track.artisttype": 0,
+                "track.artistname": 0,
+                "track.albumtype": 0,
+                "track.__v": 0,
+                "track.previewurl": 0
+            },
+        },
+    ])
+
+    return ids
+}
+
 module.exports = {
     createLike,
     deleteLike,
-    getLike
+    getLike,
+    getIds
 }
