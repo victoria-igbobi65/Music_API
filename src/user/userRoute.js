@@ -10,6 +10,12 @@ const router = express.Router()
 
 
 router
+    .route('/:id/unsuspend')
+    .post(middleware.checkToken, middleware.protect, middleware.validateId, adminController.unsuspendUser)
+
+
+
+router
     .route('/:id/suspend')
     .post(middleware.checkToken, middleware.protect, middleware.validateId, validatesuspensionBody, adminController.suspendUser)
 
