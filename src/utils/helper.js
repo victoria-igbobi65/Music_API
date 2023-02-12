@@ -3,7 +3,6 @@ const CONSTANTS = require('../constants/ts')
 const crypto = require('crypto')
 const {promisify} = require('util')
 const mongoose  = require('mongoose')
-const { object } = require('joi')
 require('dotenv').config()
 
 
@@ -108,3 +107,22 @@ exports.destructure = async( array ) => {
 
 }
 
+exports.buildSearchUrl = ( object ) => {
+    let url = `${CONSTANTS.LINKS.SPOTIFYREQUESTBASEURL}search`
+    if (object.q){
+        url += `?q=${object.q}`
+    }
+    if( object.type ){
+        const types = object.type.split(",").map(( type ) => type.trim()).join(",")
+        url += `&type=${types}`
+    }
+    if ( object.year ){
+        url += `&year=${object.year}`
+    }
+
+    if ( !object.q ){
+        return false
+    }
+    return url
+
+}
