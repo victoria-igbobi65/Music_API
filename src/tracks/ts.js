@@ -155,3 +155,27 @@ exports.albumTracks = catchAsync(async (req, res) => {
     })
 })
 
+
+
+exports.search = catchAsync( async( req, res) => {
+
+    const url = HELPER.buildSearchUrl( {...req.query} )
+    if (!url){
+        throw new AppError('Search not provided', StatusCodes.BAD_REQUEST)
+    }
+   
+    const result = await apiCall( url )
+    console.log(url)
+    res.status( StatusCodes.OK ).json({
+        status: true,
+        result
+    })
+})
+
+exports.welcome = catchAsync( async( req, res ) => {
+
+    res.status( StatusCodes.OK ).json({
+        msg: "WELCOME TO MUSIC API"
+
+    })
+}) 
