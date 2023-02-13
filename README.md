@@ -79,19 +79,19 @@ This is a music API for Music metadata.
 * route: auth/signup
 * Method: POST
 * Body: {
-    firstname: user firstname [ required ],
-    lastname: user lastname [ required],
-    username: username [unique user identifier, required],
-    email: email [ required ],
-    password: password [ required ]
-    phonenumber: phonenumber [ optional ],
-    gender: gender [ "female" || "male", optional ],
-    profilepicurl: profilepicurl [ optional ]
+    * firstname: user firstname [ required ],
+    * lastname: user lastname [ required],
+    * username: username [unique user identifier, required],
+    * email: email [ required ],
+    * password: password [ required ]
+    * phonenumber: phonenumber [ optional ],
+    * gender: gender [ "female" || "male", optional ],
+    * profilepicurl: profilepicurl [ optional ]
 }
 
 * Response status
-    200: success,
-    400: error
+    * 200: success,
+    * 400: error
 
 ***
 
@@ -99,12 +99,12 @@ This is a music API for Music metadata.
 * route: auth/login
 * Method: POST,
 * Body: {
-    email: email [ required ],
-    password: password [ required ]
+    * email: email [ required ],
+    * password: password [ required ]
 }
 * Response Status
-    200: success,
-    400: error
+    * 200: success,
+    * 400: error
     
 
 ***
@@ -113,8 +113,8 @@ This is a music API for Music metadata.
 * route: auth/logout
 * Method: POST
 * Response Status
-    200: success,
-    400: error
+    * 200: success,
+    * 400: error
 
 ***
 
@@ -125,8 +125,8 @@ This is a music API for Music metadata.
     email: email [ required ]
 }
 * Response Status
-    200: success,
-    400: error
+    * 200: success,
+    * 400: error
 
 
 ***
@@ -134,11 +134,11 @@ This is a music API for Music metadata.
 * route: auth/resetPassword/:token
 * Method: POST
 * Body: {
-    password: password [ required ]
+    * password: password [ required ]
 }
 * Response Status
-    200: success
-    400: error
+    * 200: success
+    * 400: error
 
 
 ***
@@ -147,16 +147,16 @@ This is a music API for Music metadata.
 * Method: POST
 * Body: {
 
-    firstname: user firstname [ required ],
-    lastname: user lastname [ required],
-    username: username [unique user identifier, required],
-    email: email [ required ],
-    password: password [ required ]
-    phonenumber: phonenumber [ optional ],
-    gender: gender [ "female" || "male", optional ],
-    profilepicurl: profilepicurl [ optional ]
+   * firstname: user firstname [ required ],
+   * lastname: user lastname [ required],
+   * username: username [unique user identifier, required],
+   * email: email [ required ],
+   * password: password [ required ]
+   * phonenumber: phonenumber [ optional ],
+   * gender: gender [ "female" || "male", optional ],
+   * profilepicurl: profilepicurl [ optional ]
 
 }
 * Respone Status
-    200: success
-    400: error
+    * 200: success
+    * 400: error
