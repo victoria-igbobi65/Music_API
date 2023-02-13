@@ -1,8 +1,8 @@
-#MUSIC API
+# MUSIC API
 ---
 ---
 
-###Tracks
+### Tracks
 
 This is a music API for Music metadata.
  1. users can search for songs
@@ -15,7 +15,7 @@ This is a music API for Music metadata.
  8. get tracks under an album, 
 
 
-###Playlist
+### Playlist
 1. users can create their playlists
 2. get all their playlists
 3. delete a playlist
@@ -27,20 +27,20 @@ This is a music API for Music metadata.
 9. get all tracks in a spotify playlist
 
 
-###Me
+### Me
 1. users can get all their played tracks
 2. users can get all their liked tracks
 3. users can get their frequently played tracks
 4. users can get track recommendations based on their likes and listening history
 
 
-###Category
+### Category
 1. users can get categories
 2. users can get tracks under a category
 3. users can get playlists under a category
 
 
-###Authentication
+### Authentication
 1. users can sign up to application
 2. users can login to application
 3. users can logout from application
@@ -48,7 +48,7 @@ This is a music API for Music metadata.
 5. admin registraction
 
 
-###Artists
+### Artists
 1. users can get information about an artist
 2. users can get a list of several artists
 3. users can get an artist's popular tracks
@@ -56,13 +56,13 @@ This is a music API for Music metadata.
 5. users can get a list of albums by an artist
 
 
-###Admin
+### Admin
 1. admin can suspend a user
 2. admin can unsuspend a user
 
 ---
 ---
-##SETUP
+## SETUP
 
 * Install nodejs
 * fork this repository
@@ -73,9 +73,9 @@ This is a music API for Music metadata.
 ---
 ---
 
-##API ENDPOINTS
+## API ENDPOINTS
 
-###Signup user
+### Signup user
 * route: auth/signup
 * Method: POST
 * Body: {
@@ -95,7 +95,7 @@ This is a music API for Music metadata.
 
 ***
 
-###User Login
+### User Login
 * route: auth/login
 * Method: POST,
 * Body: {
@@ -109,7 +109,7 @@ This is a music API for Music metadata.
 
 ***
 
-###User Logout
+### User Logout
 * route: auth/logout
 * Method: POST
 * Response Status
@@ -130,7 +130,7 @@ This is a music API for Music metadata.
 
 
 ***
-###Reset Password
+### Reset Password
 * route: auth/resetPassword/:token
 * Method: POST
 * Body: {
@@ -142,7 +142,7 @@ This is a music API for Music metadata.
 
 
 ***
-###Admin Signup
+### Admin Signup
 * route: auth/admin/signup
 * Method: POST
 * Body: {
