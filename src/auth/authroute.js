@@ -25,7 +25,7 @@ router
 
 router
     .route("/logout")
-    .get(authController.logout)
+    .post(authController.logout)
 
 
 router 
