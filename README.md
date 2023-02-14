@@ -75,6 +75,9 @@ This is a music API for Music metadata.
 
 ## API ENDPOINTS
 
+## AUTH
+
+
 ### Signup user
 * route: auth/signup
 * Method: POST
@@ -135,6 +138,7 @@ This is a music API for Music metadata.
 * Method: POST
 * Body: {
     * password: password [ required ]
+
 }
 * Response Status
     * 200: success
@@ -160,3 +164,124 @@ This is a music API for Music metadata.
 * Respone Status
     * 200: success
     * 400: error
+
+
+***
+
+## TRACKS
+
+
+### Get a track information
+* route: /track/:trackid
+* Method: GET
+* Body: null
+* Response Status
+    * 200 success
+    * 400 error
+
+
+***
+
+### Like a track
+* route: /track/:trackid/like
+* Method: POST
+* Body: null
+* Response status
+    * 200 success
+    * 400 error
+
+
+### Share a track
+* route: /track/:trackid/share
+* Method: GET
+* Body: nill
+* Response status
+    * 200 success
+    * 400 error
+
+
+### unlike a track
+* route: /track/:trackid/unlike
+* Method: DELETE
+* Body: nill
+* Response status
+    * 200 success
+    * 400 error
+
+
+### Dislike a track
+* route: /track/:trackid/dislike
+* Method: POST
+* Body: null
+* Response status
+    * 200 success
+    * 400 error
+
+
+### Get related tracks
+* route: /track/:trackid/related
+* Method: GET
+* Body: null
+* Response status
+    * 200 success
+    * 400 error
+
+
+### Get new release
+* route: /track/new-releases
+* Method: GET
+* Body: null
+* Response status
+    * 200 success
+    * 400 error
+
+
+### Get list of tracks
+* route: /track/
+* Method: GET
+* Body: null
+* Response status
+    * 200 success
+    * 400 error
+
+
+### Get tracks under an album
+* route: /track/albums/:albumid
+* Method: GET
+* Body: null
+* Response status
+    * 200 success
+    * 400 error
+
+
+### Search tracks
+* route: /search
+* Query parameters
+    * q = search word
+    * type = track, album, artist 
+    * year = year
+* Method: GET
+* Body: null
+* Response status
+    * 200 success
+    * 400 error
+
+
+***
+
+## PLAYLIST
+
+### Create new playlist
+* route: /me/playlist
+* Method: POST
+* Body: null
+* Response status
+    * 200 success
+    * 400 error
+
+***
+
+
+
+
+
