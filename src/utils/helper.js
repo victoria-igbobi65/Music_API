@@ -126,3 +126,12 @@ exports.buildSearchUrl = ( object ) => {
     return url
 
 }
+
+exports.rateLimitObject = () => {
+    return {
+        windowMs: 12 * 60 * 60 * 1000,
+        max: 5,
+        message: 'You exceeded 100 request in 12 hours!',
+        headers: true,
+    }
+}
